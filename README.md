@@ -1,13 +1,15 @@
 zip
 ===================
 
-A Cordova plugin to unzip files in Android and iOS.
+A Cordova plugin to zip and unzip files and folders in Android and iOS.
 
 ##Installation
 
-    cordova plugin add https://github.com/MobileChromeApps/zip.git
+    cordova plugin add https://github.com/vipullimbachiya/zip.git
 
 ##Usage
+
+Unzip :
 
     zip.unzip(<source zip>, <destination dir>, <callback>, [<progressCallback>]);
 
@@ -17,6 +19,8 @@ interface or absolute paths to files on the device.
 The callback argument will be executed when the unzip is complete, or when an
 error occurs. It will be called with a single argument, which will be 0 on
 success, or -1 on failure.
+
+Zip :
 
     zio.compress([files], <fileName>, <callback>, [<progressCallback>]);
 
