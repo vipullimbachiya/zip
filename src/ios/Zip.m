@@ -27,7 +27,7 @@
     self->_command = command;
     [self.commandDelegate runInBackground:^{
         CDVPluginResult* pluginResult = nil;
-        
+
         @try {
             NSString *zipURL = [command.arguments objectAtIndex:0];
             NSString *destinationURL = [command.arguments objectAtIndex:1];
@@ -46,7 +46,41 @@
             NSLog(@"%@ - %@", @"Error occurred during unzipping", [exception debugDescription]);
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error occurred during unzipping"];
         }
-        
+
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+- (void)compress:(CDVInvokedUrlCommand*)command
+{
+    self->_command = command;
+    [self.commandDelegate runInBackground:^{
+        CDVPluginResult* pluginResult = nil;
+
+        @try {
+            NSArray *subpaths = [command.arguments objectAtIndex:0];
+            NSString *zipURL = [command.arguments objectAtIndex:1];
+            NSString *zipPath = [self pathForURL:zipURL];
+            NSError *error;
+            NSLog(@"%@",subpaths);
+            NSMutableArray *paths = [NSMutableArray array];
+            for (NSString *path in subpaths) {
+                //NSString *curPath = [self pathForURL:path];
+                [paths addObject:[self pathForURL:path]];
+            }
+            NSArray *arrayOfPaths = [NSArray arrayWithArray:paths];
+            NSLog(@"%@",[NSString stringWithFormat:@"%@",zipPath]);
+            if([SSZipArchive createZipFileAtPath:[NSString stringWithFormat:@"%@",zipPath] withFilesAtPaths:arrayOfPaths]) {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            } else {
+                NSLog(@"%@ - %@", @"Error occurred during zipping", [error localizedDescription]);
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error occurred during zipping"];
+            }
+        } @catch(NSException* exception) {
+            NSLog(@"%@ - %@", @"Error occurred during zipping", [exception debugDescription]);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error occurred during zipping"];
+        }
+
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 }

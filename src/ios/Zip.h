@@ -9,6 +9,7 @@
 
 
 - (void)unzip:(CDVInvokedUrlCommand*)command;
+- (void)compress:(CDVInvokedUrlCommand*)command;
 - (void)zipArchiveProgressEvent:(NSInteger)loaded total:(NSInteger)total;
 
 @end
